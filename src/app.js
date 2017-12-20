@@ -2,24 +2,32 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 class App extends React.Component {
+    constructor(){
+        super();
+    this.showSidebar = this.showSidebar.bind(this);
+    }
+    showSidebar(e) {
+        e.preventDefault();
+        this.sideBar.classList.add("show");
+    }
     render(){
         return (
             <div>
                 <header className="mainHeader">
                     <h1>Noted</h1>
                     <nav>
-                        <a href="">Add New Note</a>
+                        <a href="" onClick={e => this.showSidebar(e)}>Add New Note</a>
                     </nav>
                 </header>
                 <section className="notes">
                     <div className="noteCard">
                     <i className="fa fa-edit"></i>
-                    <i className="fa fa-lines"></i>
+                    <i className="fa fa-times"></i>
                     <h4>Test Note</h4>
                     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor fuga aliquam ipsa. Repellat, tempore et minus iste consequatur quia iusto laboriosam aspernatur at ipsam. Eaque saepe iusto tempora neque vel.</p>
                     </div>
                 </section>
-                <aside className="sidebar">
+                <aside className="sidebar" ref={ref=>this.sideBar = ref}>
                     <form>
                         <h3>Add New Note</h3>
                         <div className="close-btn">
