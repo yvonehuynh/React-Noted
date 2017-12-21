@@ -53,8 +53,9 @@ class App extends React.Component {
         this.noteText.value ="",
         this.showSidebar(e);
     }
-    removeNote(noteId){
-
+    removeNote(key){
+        const dbRef = firebase.database().ref(key);
+        dbRef.remove();
     }
     render(){
         return (
