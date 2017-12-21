@@ -2,6 +2,17 @@ import React from "react";
 import ReactDOM from "react-dom";
 import NoteCard from "./notesCard";
 
+  // Initialize Firebase
+  const config = {
+    apiKey: "AIzaSyB6kvie2akbF6WmeFdP6nXttuB1_1Hs52c",
+    authDomain: "noted-d4895.firebaseapp.com",
+    databaseURL: "https://noted-d4895.firebaseio.com",
+    projectId: "noted-d4895",
+    storageBucket: "",
+    messagingSenderId: "635844775457"
+  };
+  firebase.initializeApp(config);
+
 class App extends React.Component {
     constructor(){
         super();
@@ -10,6 +21,19 @@ class App extends React.Component {
         }
     this.showSidebar = this.showSidebar.bind(this);
     this.addNote = this.addNote.bind(this);
+    }
+    componentDidMount(){
+        firebase.database().ref().on("value", (res)=>{
+            const userData = res.val();
+            const dataArray = [];
+            for(let objKey in userData) {
+                userData[objKey].key = objKey;
+                dataArray.push(userData[objKey])
+            }   
+            this.setState({
+                notes: dataArray
+            })
+        });
     }
     showSidebar(e) {
         e.preventDefault();
@@ -21,14 +45,16 @@ class App extends React.Component {
             title: this.noteTtitle.value,
             text: this.noteText.value
         }
-        const newNotes = Array.from(this.state.notes);
-        newNotes.push(note);
-        this.setState({
-            notes: newNotes
-        })
+
+        const dbRef = firebase.database().ref();
+        dbRef.push(note);
+        
         this.noteText.value = "",
         this.noteText.value ="",
         this.showSidebar(e);
+    }
+    removeNote(noteId){
+
     }
     render(){
         return (
@@ -42,7 +68,7 @@ class App extends React.Component {
                 <section className="notes">
                     {this.state.notes.map((note, i) => {
                         return (
-                            <NoteCard note={note} key={`note-${i}`}/>
+                            <NoteCard note={note} key={`note-${i}`} removeNote={this.removeNote}/>
                         )
                     }).reverse()}
                 </section>
